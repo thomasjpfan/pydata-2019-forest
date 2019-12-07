@@ -783,6 +783,9 @@ disp.figure_.tight_layout()
 
 # Partial Dependence With Cancer Data (Pt 3)
 
+[.code-highlight: all]
+[.code-highlight: 5-6]
+
 ```py
 from sklearn.inspection import plot_partial_dependence
 
