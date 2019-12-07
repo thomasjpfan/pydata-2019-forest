@@ -576,7 +576,7 @@ print("RF test accuracy: %0.3f" % rf.score(X_test, y_test))
 
 ![fit](images/permutation_importance_train.png)
 
-# Permutation Importance Collinear features (Pt 1)
+# Permutation Importance, Correlated features (Pt 1)
 
 [.code-highlight: all]
 [.code-highlight: 1-4]
@@ -602,7 +602,7 @@ result = permutation_importance(tree, X_train, y_train, n_repeats=30)
 
 ![fit 140%](images/permutation_importance_example.png)
 
-# Permutation Importance Collinear features (Pt 2)
+# Permutation Importance, Correlated features (Pt 2)
 
 [.code-highlight: all]
 [.code-highlight: 1-3]
@@ -626,7 +626,7 @@ result = permutation_importance(tree2, X_train, y_train, n_repeats=30)
 
 ![fit 140%](images/permutation_importance_duplicate_feature.png)
 
-# Permutation Importance, Correlated Features (Pt 1)
+# Permutation Importance, Correlated Features (Pt 3)
 
 [.code-highlight: all]
 [.code-highlight: 1-5]
@@ -658,7 +658,7 @@ result = permutation_importance(clf, X_train, y_train, n_repeats=30)
 
 ---
 
-# Permutation Importance, Correlated Features (Pt 2)
+# Permutation Importance, Correlated Features (Pt 4)
 
 [.code-highlight: all]
 [.code-highlight: 1-2]
