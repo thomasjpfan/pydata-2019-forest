@@ -231,11 +231,11 @@ where $$\eta$$ is the learning rate
 
 # Gradient Boosting 🏂 - `least_squares`
 
-- Let $$h_{m}(X)=(y - f_m(X))$$
-
 $$
 f_{m+1}(X) = f_{m}(X) + \eta h_{m}(X)
 $$
+
+- where $$h_{m}(X)=(y - f_m(X))$$
 
 - We need to learn $$h_{m}(X)$$!
 
