@@ -517,8 +517,7 @@ numerical_columns = ['age', 'sibsp', 'parch', 'fare', 'random_num']
 
 X = X[categorical_columns + numerical_columns]
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, stratify=y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
 ```
 
 # Permutation vs Impurity (Pt 3)
@@ -627,7 +626,7 @@ result = permutation_importance(tree2, X_train, y_train, n_repeats=30)
 
 ![fit 140%](images/permutation_importance_duplicate_feature.png)
 
-# Permutation Importance With Correlated Features (Pt 1)
+# Permutation Importance, Correlated Features (Pt 1)
 
 [.code-highlight: all]
 [.code-highlight: 1-5]
@@ -638,9 +637,9 @@ from sklearn.datasets import load_breast_cancer
 
 data = load_breast_cancer()
 X, y = data.data, data.target
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y)
 
-clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf = RandomForestClassifier(n_estimators=100)
 clf.fit(X_train, y_train)
 
 print("Accuracy on test data: {:.2f}".format(clf.score(X_test, y_test)))
@@ -659,24 +658,25 @@ result = permutation_importance(clf, X_train, y_train, n_repeats=30)
 
 ---
 
-# Permutation Importance With Correlated Features (Pt 2)
+# Permutation Importance, Correlated Features (Pt 2)
 
 [.code-highlight: all]
 [.code-highlight: 1-2]
-[.code-highlight: 4-11]
+[.code-highlight: 4-12]
 
 ```py
 X_train_sel = X_train[:, selected_features]
 X_test_sel = X_test[:, selected_features]
 
-clf_sel = RandomForestClassifier(n_estimators=100, random_state=42)
+clf_sel = RandomForestClassifier(n_estimators=100)
 clf_sel.fit(X_train_sel, y_train)
 
 print("Accuracy on test data with features removed: {:.2f}".format(
       clf_sel.score(X_test_sel, y_test)))
 # Accuracy on test data with features removed: 0.97
 
-result = permutation_importance(clf_sel, X_train_sel, y_train, n_repeats=30)
+result = permutation_importance(clf_sel, X_train_sel, y_train,
+                                n_repeats=30)
 ```
 
 ---
@@ -845,4 +845,4 @@ from sklearn.inspection import plot_partial_dependence
 ```
 
 - [github.com/thomasjpfan/pydata-2019-forest](https://github.com/thomasjpfan/pydata-2019-forest)
-- @thomasjpfan
+- **@thomasjpfan**
