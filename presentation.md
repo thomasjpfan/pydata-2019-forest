@@ -10,6 +10,15 @@ Thomas J Fan
 Scikit-learn Core Developer
 @thomasjpfan
 
+# Supervised learning  📖
+
+$$
+y = f(X)
+$$
+
+- X of shape `(n_samples, n_features)`
+- y of shape `(n_samples,)`
+
 # scikit-learn API  🛠
 
 ```py
@@ -21,16 +30,9 @@ clf = HistGradientBoostingClassifier()
 clf.fit(X, y)
 
 clf.predict(X)
+
+clf.score(X, y)
 ```
-
-# Supervised learning  📖
-
-$$
-y = f(X)
-$$
-
-- X of shape `(n_samples, n_features)`
-- y of shape `(n_samples,)`
 
 # Tree?  🌳
 
@@ -41,12 +43,10 @@ $$
 ```py
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree import DecisionTreeClassifier
-```
 
-- `max_depth=None`
-- `min_samples_split=2`
-- `min_samples_leaf=1`
-- etc...
+tree = DecisionTreeClassifier(max_depth=None,
+                              min_samples_leaf=1)
+```
 
 # Forest
 
@@ -113,7 +113,6 @@ rf_pruned.score(X_test, y_test)
 **Tree Building**
 
 - Pure Python?
-- Numpy?
 - Cython
 
 **Forest Building**
@@ -177,6 +176,7 @@ trees = Parallel(n_jobs=self.n_jobs,
 
 - @hug_nicolas - Associate Research Scientist @ Columbia University
 
+**Deep Dive into scikit-learn's HistGradientBoosting Classifier and Regressor**
 - [github.com/thomasjpfan/pydata-2019-histgradientboosting](https://github.com/thomasjpfan/pydata-2019-histgradientboosting)
 - [youtu.be/J9QQ6l_HToU](https://youtu.be/J9QQ6l_HToU)
 
@@ -232,7 +232,7 @@ where $$\eta$$ is the learning rate
 
 # Gradient Boosting 🏂 - `least_squares`
 
-- Let $$h_{m}(X)=(y - f_{m}(X))$$
+- Let $$h_{m}(X)=(y - f_m(X))$$
 
 $$
 f_{m+1}(X) = f_{m}(X) + \eta h_{m}(X)
@@ -267,7 +267,6 @@ $$
 # Implementation? 🤔
 
 - Pure Python?
-- Numpy?
 - Cython?
 - Cython + OpenMP!
 
@@ -283,6 +282,7 @@ $$
 
 # OpenMP! (Bin data 🗑, Pt 2)
 
+[.code-highlight: all]
 [.code-highlight: 1]
 
 ```py
@@ -356,8 +356,17 @@ for i in prange(n_samples, schedule='static', nogil=True):
 
 # Hyperparameters (Boosting 🏂)
 
-- `learning_rate=0.1` ($$\eta$$)
-- `max_iter=100`
+```py
+from sklearn.experimental import enable_hist_gradient_boosting
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingRegressor
+
+HistGradientBoostingRegressor(learning_rate=0.1,
+                              max_iter=100,
+                              ...)
+```
+
+- `export OMP_NUM_THREADS=12`
 
 # Benchmarks 🚀 (HIGGS Pt 1)
 
@@ -378,7 +387,7 @@ for i in prange(n_samples, schedule='static', nogil=True):
 
 # Benchmarks 🚀 (HIGGS Pt 3)
 
-`export OMP_NUM_THREADS=4` `max_iter=100` (on my laptop)
+`export OMP_NUM_THREADS=4` `max_iter=100`
 
 | library  | time (12 cores) | time (4 cores) |
 |----------|------|---------|
@@ -519,7 +528,7 @@ numerical_pipe = Pipeline([
     ('imputer', SimpleImputer(strategy='mean'))
 ])
 
-preprocessing = ColumnTransformer(
+col_transformer = ColumnTransformer(
     [('cat', categorical_pipe, categorical_columns),
      ('num', numerical_pipe, numerical_columns)])
 ```
@@ -532,7 +541,7 @@ preprocessing = ColumnTransformer(
 
 ```py
 rf = Pipeline([
-    ('preprocess', preprocessing),
+    ('preprocess', col_transformer),
     ('classifier', RandomForestClassifier())
 ])
 
@@ -746,9 +755,10 @@ hist.score(X_test_sel, y_test)
 # Partial Dependence With Cancer Data (Pt 2)
 
 ```py
+from sklearn.inspection import plot_partial_dependence
+
 disp = plot_partial_dependence(
-    hist, X_train_sel,
-    n_cols=2,
+    hist, X_train_sel, n_cols=2,
     features=['mean radius', 'mean concavity',
               'mean texture', 'radius error'],
     feature_names=selected_feature_names)
@@ -763,9 +773,10 @@ disp.figure_.tight_layout()
 # Partial Dependence With Cancer Data (Pt 3)
 
 ```py
+from sklearn.inspection import plot_partial_dependence
+
 disp = plot_partial_dependence(
-    hist, X_train_sel,
-    n_cols=2,
+    hist, X_train_sel, n_cols=2,
     features=['mean radius', 'mean concavity',
               'mean smoothness', 'texture error'],
     feature_names=selected_feature_names)
