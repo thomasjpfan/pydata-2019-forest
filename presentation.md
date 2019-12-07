@@ -833,9 +833,11 @@ disp.figure_
 # Do You Want To Build a **Forest**?
 
 ```py
+# Cython + Joblib
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 
+# Cython + OpenMP
 from sklearn.experimental import enable_hist_gradient_boosting
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor
