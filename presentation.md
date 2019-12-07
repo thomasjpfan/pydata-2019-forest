@@ -44,8 +44,8 @@ clf.score(X, y)
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree import DecisionTreeClassifier
 
-tree = DecisionTreeClassifier(max_depth=None,
-                              min_samples_leaf=1)
+tree = DecisionTreeClassifier(
+    max_depth=None, min_samples_leaf=1, ...)
 ```
 
 # Forest
@@ -370,7 +370,7 @@ HistGradientBoostingRegressor(learning_rate=0.1,
 
 # Benchmarks 🚀 (HIGGS Pt 1)
 
-- 8800000 records
+- 8800000 samples
 - 28 features
 - binary classification  (1 for signal, 0 for background)
 
@@ -444,9 +444,20 @@ model.score(X_train_perm_1, y_train)
 # Permutation Feature Importance (Pt 3)
 
 ```py
-model.score(X_train_perm_2, y_train)
+X_train_perm_2 = [
+    [1, 1, 2],
+    [3, 2, 3],
+    [4, 1, 4],
+    [2, 1, 9],
+    [0, 3, 1]
+]
+model.score(X_train_perm_1, y_train)
 # 0.73
+```
 
+# Permutation Feature Importance (Pt 4)
+
+```py
 model.score(X_train_perm_3, y_train)
 # 0.80
 ```
@@ -459,7 +470,7 @@ model.score(X_train_perm_3, y_train)
 # [0.20, 0.17, 0.10]
 ```
 
-# Permutation Feature Importance (Pt 4)
+# Permutation Feature Importance (Pt 5)
 
 [.code-highlight: all]
 [.code-highlight: 1-3]
@@ -648,10 +659,6 @@ result = permutation_importance(clf, X_train, y_train, n_repeats=30)
 
 ---
 
-![fit](images/dendrogram.png)
-
----
-
 # Permutation Importance With Correlated Features (Pt 2)
 
 [.code-highlight: all]
@@ -753,6 +760,10 @@ hist.score(X_test_sel, y_test)
 ```
 
 # Partial Dependence With Cancer Data (Pt 2)
+
+[.code-highlight: all]
+[.code-highlight: 3-4]
+[.code-highlight: 5-6]
 
 ```py
 from sklearn.inspection import plot_partial_dependence
