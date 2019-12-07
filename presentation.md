@@ -264,6 +264,8 @@ $$
     1. Add tree to predictors
     1. Update gradients and hessians
 
+![right fit](images/gradient-split-points.png)
+
 # Implementation? 🤔
 
 - Pure Python?
