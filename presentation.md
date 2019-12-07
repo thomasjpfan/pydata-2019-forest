@@ -466,7 +466,7 @@ model.score(X_train_perm_3, y_train)
 - permutation feature importance for the 0th feature:
 
 ```py
-[0.90 - 0.70, 0.90 - 0.73, 0.9 - 0.80]
+[0.90 - 0.70, 0.90 - 0.73, 0.90 - 0.80]
 # [0.20, 0.17, 0.10]
 ```
 
