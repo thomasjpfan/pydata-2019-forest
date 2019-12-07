@@ -178,7 +178,6 @@ trees = Parallel(n_jobs=self.n_jobs,
 
 **Deep Dive into scikit-learn's HistGradientBoosting Classifier and Regressor**
 - [github.com/thomasjpfan/pydata-2019-histgradientboosting](https://github.com/thomasjpfan/pydata-2019-histgradientboosting)
-- [youtu.be/J9QQ6l_HToU](https://youtu.be/J9QQ6l_HToU)
 
 # HistGradient**Boosting**
 
