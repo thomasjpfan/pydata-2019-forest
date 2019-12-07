@@ -362,9 +362,8 @@ from sklearn.experimental import enable_hist_gradient_boosting
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-HistGradientBoostingRegressor(learning_rate=0.1,
-                              max_iter=100,
-                              ...)
+HistGradientBoostingClassifier(
+    learning_rate=0.1, max_iter=100, ...)
 ```
 
 - `export OMP_NUM_THREADS=12`
@@ -377,7 +376,7 @@ HistGradientBoostingRegressor(learning_rate=0.1,
 
 # Benchmarks 🚀 (HIGGS Pt 2)
 
-- `max_iter=100`, `learning_rate=0.1`, `export OMP_NUM_THREADS=12`
+- `export OMP_NUM_THREADS=12`
 
 | library  | time | roc auc | accuracy |
 |----------|------|---------|----------|
@@ -388,7 +387,7 @@ HistGradientBoostingRegressor(learning_rate=0.1,
 
 # Benchmarks 🚀 (HIGGS Pt 3)
 
-`export OMP_NUM_THREADS=4` `max_iter=100`
+- `export OMP_NUM_THREADS=4`
 
 | library  | time (12 cores) | time (4 cores) |
 |----------|------|---------|
