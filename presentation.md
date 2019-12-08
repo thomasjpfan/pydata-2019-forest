@@ -45,10 +45,12 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.tree import DecisionTreeClassifier
 
 tree = DecisionTreeClassifier(
-    max_depth=None, min_samples_leaf=1, ...)
+    max_depth=None,
+    min_samples_leaf=1,
+    ...)
 ```
 
-# Forest
+# Forest 🌲🌲
 
 ```py
 from sklearn.ensemble import RandomForestClassifier
@@ -71,44 +73,7 @@ rfr = RandomForestRegressor(n_estimators=100, ...)
 🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄
 🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄🌳🌲🌴🎄
 
-# Forest Details - Pruning (new in 0.22!)
-
-```py
-from sklearn.datasets import fetch_california_housing
-from sklearn.model_selection import train_test_split
-
-housing = fetch_california_housing()
-X_train, X_test, y_train, y_test = train_test_split(
-    housing.data, housing.target
-)
-```
-
-# Forest Details - Pruning (new in 0.22!)
-
-[.code-highlight: all]
-[.code-highlight: 1-7]
-[.code-highlight: 9-13]
-[.code-highlight: 4-7,10-13]
-
-```py
-from sklearn.ensemble import RandomForestRegressor
-
-rf = RandomForestRegressor().fit(X_train, y_train)
-np.mean([est.tree_.node_count for est in rf.estimators_])
-# 18736.58
-rf.score(X_test, y_test)
-# 0.7942
-
-rf_pruned = RandomForestRegressor(ccp_alpha=1e-5).fit(X_train, y_train)
-np.mean([est.tree_.node_count for est in rf_pruned.estimators_])
-# 5687.18
-rf_pruned.score(X_test, y_test)
-# 0.7938
-```
-
-**30% of the nodes!**
-
-# Forest Implementation
+# Forest Implementation 🔨
 
 **Tree Building**
 
@@ -119,7 +84,7 @@ rf_pruned.score(X_test, y_test)
 
 - Parallelized with joblib
 
-# joblib?
+# joblib
 
 [.code-highlight: all]
 [.code-highlight: 2-4]
@@ -136,7 +101,7 @@ Parallel(n_jobs=4)(
 # [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
 ```
 
-# Forest Building (joblib)
+# Forest Building (joblib Pt 1)
 
 [.code-highlight: all]
 [.code-highlight: 1-2]
@@ -149,27 +114,6 @@ trees = Parallel(n_jobs=self.n_jobs,
                  prefer="threads")(
     delayed(_parallel_build_trees)(...)
     for i, t in enumerate(trees))
-```
-
-# Forest Building (joblib)
-
-[.code-highlight: all]
-[.code-highlight: 1-2]
-[.code-highlight: 4-6]
-[.code-highlight: 1-2,7-9]
-
-**predict_proba**
-
-```py
-all_proba = [...]
-lock = threading.Lock()
-
-trees = Parallel(n_jobs=self.n_jobs,
-                 prefer="threads",
-                 require='sharedmem')(
-    delayed(_accumulate_prediction)(
-        e.predict_proba, X, all_proba, lock)
-    for e in self.estimators_)
 ```
 
 # HistGradientBoosting (New in 0.21)
@@ -287,7 +231,7 @@ $$
 [.code-highlight: 1]
 
 ```py
-for i in range(data.shape[0]):
+for i in range(n_samples):
     left, right = 0, binning_thresholds.shape[0]
     while left < right:
         middle = (right + left - 1) // 2
@@ -300,11 +244,10 @@ for i in range(data.shape[0]):
 
 # OpenMP! (Bin data 🗑, Pt 3)
 
-[.code-highlight: 1-4]
+[.code-highlight: 1-3]
 
 ```py
-# sklearn/ensemble/_hist_gradient_boosting/_binning.pyx
-for i in prange(data.shape[0],
+for i in prange(n_samples,
                 schedule='static',
                 nogil=True):
     left, right = 0, binning_thresholds.shape[0]
@@ -330,7 +273,6 @@ for i in prange(data.shape[0],
 # OpenMP! (Find best splits ✂️, Pt 2)
 
 ```py
-# sklearn/ensemble/_hist_gradient_boosting/splitting.pyx
 for feature_idx in prange(n_features, schedule='static'):
     # For each feature, find best bin to split on
 ```
@@ -350,7 +292,6 @@ for feature_idx in prange(n_features, schedule='static'):
 - `least_squares`
 
 ```py
-# sklearn/ensemble/_hist_gradient_boosting/_loss.pyx
 for i in prange(n_samples, schedule='static', nogil=True):
     gradients[i] = raw_predictions[i] - y_true[i]
 ```
@@ -363,7 +304,9 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 HistGradientBoostingClassifier(
-    learning_rate=0.1, max_iter=100, ...)
+    learning_rate=0.1,
+    max_iter=100,
+    ...)
 ```
 
 - `export OMP_NUM_THREADS=12`
@@ -410,7 +353,7 @@ from sklearn.inspection import partial_dependence
 from sklearn.inspection import plot_partial_dependence
 ```
 
-# Permutation Feature Importance (Pt 1)
+# Permutation Feature Importance 👑 (Pt 1)
 
 ```py
 X_train = [
@@ -427,7 +370,7 @@ model.score(X_train, y_train)
 # 0.90
 ```
 
-# Permutation Feature Importance (Pt 2)
+# Permutation Feature Importance 👑 (Pt 2)
 
 ```py
 X_train_perm_1 = [
@@ -441,7 +384,7 @@ model.score(X_train_perm_1, y_train)
 # 0.70
 ```
 
-# Permutation Feature Importance (Pt 3)
+# Permutation Feature Importance 👑 (Pt 3)
 
 ```py
 X_train_perm_2 = [
@@ -455,7 +398,7 @@ model.score(X_train_perm_1, y_train)
 # 0.73
 ```
 
-# Permutation Feature Importance (Pt 4)
+# Permutation Feature Importance 👑 (Pt 4)
 
 ```py
 model.score(X_train_perm_3, y_train)
@@ -463,14 +406,14 @@ model.score(X_train_perm_3, y_train)
 ```
 
 - Recall: `model.score(X_train, y_train) = 0.90`
-- permutation feature importance for the 0th feature:
+- permutation feature importance for the 1st feature:
 
 ```py
 [0.90 - 0.70, 0.90 - 0.73, 0.90 - 0.80]
 # [0.20, 0.17, 0.10]
 ```
 
-# Permutation Feature Importance (Pt 5)
+# Permutation Feature Importance 👑 (Pt 5)
 
 [.code-highlight: all]
 [.code-highlight: 1-3]
@@ -489,7 +432,7 @@ result['importances_std']
 # [0.0419 0.0816, ...])
 ```
 
-# Permutation vs Impurity based Feature Imporantance
+# Permutation 🆚 Impurity based Feature Imporantance
 
 [.code-highlight: all]
 [.code-highlight: 1-3]
@@ -505,7 +448,7 @@ X['random_cat'] = rng.randint(3, size=X.shape[0])
 X['random_num'] = rng.randn(X.shape[0])
 ```
 
-# Permutation vs Impurity (Pt 2)
+# Permutation 🆚 Impurity (Pt 2)
 
 [.code-highlight: all]
 [.code-highlight: 1-4]
@@ -520,13 +463,12 @@ X = X[categorical_columns + numerical_columns]
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
 ```
 
-# Permutation vs Impurity (Pt 3)
+# Permutation 🆚 Impurity (Pt 3)
 
 [.code-highlight: all]
 [.code-highlight: 1-5]
 [.code-highlight: 6-8]
 [.code-highlight: 10-12]
-
 
 ```py
 categorical_pipe = Pipeline([
@@ -543,7 +485,7 @@ col_transformer = ColumnTransformer(
      ('num', numerical_pipe, numerical_columns)])
 ```
 
-# Permutation vs Impurity (Pt 4)
+# Permutation 🆚 Impurity (Pt 4)
 
 [.code-highlight: all]
 [.code-highlight: 1-6]
@@ -572,61 +514,7 @@ print("RF test accuracy: %0.3f" % rf.score(X_test, y_test))
 
 ![fit](images/permutation_importance_test.png)
 
----
-
-![fit](images/permutation_importance_train.png)
-
-# Permutation Importance, Correlated features (Pt 1)
-
-[.code-highlight: all]
-[.code-highlight: 1-4]
-[.code-highlight: 6-10]
-[.code-highlight: 6-12]
-
-```py
-from sklearn.datasets import make_classification
-X, y = make_classification(n_features=4)
-X.shape
-# (100, 4)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-tree = RandomForestClassifier().fit(X_train, y_train)
-tree.score(X_test, y_test)
-# 0.8
-
-result = permutation_importance(tree, X_train, y_train, n_repeats=30)
-```
-
----
-
-![fit 140%](images/permutation_importance_example.png)
-
-# Permutation Importance, Correlated features (Pt 2)
-
-[.code-highlight: all]
-[.code-highlight: 1-3]
-[.code-highlight: 5-12]
-
-```py
-X = np.c_[X, X[:, 2]]
-X.shape
-# (100, 5)
-
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-tree2 = RandomForestClassifier().fit(X_train, y_train)
-tree2.score(X_test, y_test)
-# 0.8
-
-result = permutation_importance(tree2, X_train, y_train, n_repeats=30)
-```
-
----
-
-![fit 140%](images/permutation_importance_duplicate_feature.png)
-
-# Permutation Importance, Correlated Features (Pt 3)
+# Permutation Importance, Correlated Features (Pt 1)
 
 [.code-highlight: all]
 [.code-highlight: 1-5]
@@ -658,7 +546,7 @@ result = permutation_importance(clf, X_train, y_train, n_repeats=30)
 
 ---
 
-# Permutation Importance, Correlated Features (Pt 4)
+# Permutation Importance, Correlated Features (Pt 2)
 
 [.code-highlight: all]
 [.code-highlight: 1-2]
@@ -830,7 +718,34 @@ disp.figure_
 
 ![fit](images/partial_dependence_cancer_data_with_last_adjustment.png)
 
-# Do You Want To Build a **Forest**?
+# Do You Want To Build a **Forest**?  🌳🌲🌴🎄🌳
+
+```py
+# Cython + Joblib
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
+
+# Cython + OpenMP
+from sklearn.experimental import enable_hist_gradient_boosting
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.ensemble import HistGradientBoostingRegressor
+
+from sklearn.inspection import permutation_importance
+from sklearn.inspection import plot_partial_dependence
+```
+
+# HistGradientBoosting Demo!!  🚀
+
+- [github.com/thomasjpfan/pydata-2019-histgradientboosting](https://github.com/thomasjpfan/pydata-2019-histgradientboosting)
+
+| library  | time | roc auc | accuracy |
+|----------|------|---------|----------|
+| sklearn  | 38s  | 0.8125  | 0.7324   |
+| lightgbm | 39s  | 0.8124  | 0.7322   |
+| xgboost  | 48s  | 0.8126  | 0.7326   |
+| catboost | 100s | 0.8004  | 0.7222   |
+
+# Do You Want To Build a **Forest**?  🌳🌲🌴🎄🌳
 
 ```py
 # Cython + Joblib
